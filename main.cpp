@@ -159,7 +159,7 @@ int readFiles (){
 		}
 
 	}
-	else return -1; // Indicates that opening the file failed...
+	else return 0; // Indicates that opening the file failed...
 
 	return MAX_SYSTEMS;
 }
