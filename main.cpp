@@ -16,6 +16,8 @@ struct System {
        Line two;
 };
 
+System systs [30];
+
 /*
 int parse (char str[80], int expNum){
     int SScount = 0;
