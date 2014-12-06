@@ -17,6 +17,48 @@ struct System {
 };
 
 System systs [30];
+int numSysts = 0;
+
+//Alex's Mathemagical Mathland//////////////////////////////////////////////////////////////////////////////
+
+Line lineMult (Line A, int B){ //screw naming convention
+    A.a = A.a * B;
+    A.b = A.b * B;
+    A.e = A.e * B;
+    return A;
+}
+
+float systSolve (Line lineA, Line lineB){
+    return (lineA.e - lineB.e)/(lineA.b - lineB.b);
+}
+
+float lineSub (float y, Line line){
+    return (line.e - line.b*y)/line.a;
+}
+
+void mathStuff (int i){
+
+    Line lineC;
+    Line lineD;
+    float x, y;
+
+    lineC = lineMult(systs[i].one, systs[i].two.a);
+    lineD = lineMult(systs[i].two, systs[i].one.a);
+
+    y = systSolve (lineC, lineD);
+    x = lineSub (y, systs[i].one);
+
+}
+
+void mathHandler(){
+
+    for (int i = 0; i < numSysts; i++){
+        mathStuff (i);
+    }
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
 int parse (char str[80], int expNum){
