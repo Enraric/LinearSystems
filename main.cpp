@@ -1,19 +1,23 @@
-
 // Alex's job: Math Things
 // Harry's job: parsing
 // Wilson's job: File stuff + misc...
 
+#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "time.h"
+#include "iostream"
 
-
+#define FILE_NAME "Test.txt" // Change this if you want to change the file name.
+#define MAX_SYSTEMS 200
+#define MAX_CHARS 50
 
 struct Line {
        int a;
        int b;
        int e;
+	   char eqn [MAX_CHARS]; // This is somewhere to stick the whole string before it gets parsed. Also useful to actually display it later and stuff. -Wilson
 };
 
 struct System {
@@ -21,8 +25,8 @@ struct System {
        Line two;
 };
 
-System systs [30];
-int numSysts = 0;
+System systs [MAX_SYSTEMS];
+int numSysts = 0; // I'm not sure if this should be global, it seems like this could mess stuff up real bad -Wilson
 
 //Alex's Mathemagical Mathland//////////////////////////////////////////////////////////////////////////////
 
@@ -134,10 +138,36 @@ int parse (char str[80], int expNum){
 
         }
     }
+
+	return 1; // I have to put this here to get it to compile wat -Wilson
+}
+//_____________________________________________________________________End Parse
+
+int readFiles (){
+	FILE *fp;
+
+	fp = fopen(FILE_NAME,"r");
+
+	if (fp) {
+
+		for (int i = 0;i<=MAX_SYSTEMS;i++){
+			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
+				fgets (systs[i].one.eqn,MAX_CHARS,fp);
+				fgets (systs[i].two.eqn,MAX_CHARS,fp);
+			}
+			else return i;
+		}
+
+	}
+	else return -1; // Indicates that opening the file failed...
+
+	return MAX_SYSTEMS;
 }
 
-//_____________________________________________________________________End Parse
 int main (){
     printf ("Hello, world...\n");
+	printf ("%i Valid equations",readFiles());
+	numSysts = readFiles();
     system ("PAUSE");
+	return 0;
 }
