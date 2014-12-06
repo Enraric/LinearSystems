@@ -58,27 +58,81 @@ void mathHandler(){
 
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//___________________________________________________________________Begin Parse
 
-/*
+bool validInt (char character){//functions are handy and stuff
+    return (character >= 48 && character <= 57);
+}
+
 int parse (char str[80], int expNum){
     int SScount = 0;
     int partition = 0;
     char temp [80] = {""};
-    //attempting to handle format of ( - # ) OP ( - # ), with spaces between anything
-    //walks through array, looking for a different sentinels
+    //Looks like Ill have time to actually turn this mess into functions this time: yay
+    //attempting to handle format of "slopex+-intercept/slopex+-intercept"
+    //walks through array, looking for a different sentinels (#, x, + or -, #, /, #, x, + or -, #)
+    //example valid expression: "12x+4/6x-2"
+    //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; str[i] != 0; i++){
         printf ("%i\t%c\t%i\n", i, str[i], partition);
         switch (partition){
-        case 0:
-             //finds beginning of expression
-            if (str[i] == '(')
+        case 0: //adds numbers to a temp string until x
+            if (validInt (str [i])){
+                temp[SScount] = str[i];
+                SScount ++;
+            }
+            else if (str[i] == 'x'){
+                temp [SScount] = 0;
+                systs[expNum].one.a = atoi (temp);
+                SScount=0;
                 partition ++;
-            break;
-        case 1:
-             //finds any negative signs, each one switches the current sign
-            //also takes all digits until the slash or bracket
-            //replace with function if time allows
+            }
+        case 1: //finds operator (neccesary?)
+            if (str[i] == '-' || str[i] == '+')
+                partition ++;
+        case 2: //finds y intercept
+            if (validInt (str [i])){
+                temp[SScount] = str[i];
+                SScount ++;
+            }
+            else if (str[i] == '/'){
+                temp [SScount] = 0;
+                systs[expNum].one.b = atoi (temp);
+                SScount=0;
+                partition ++;
+            }
+        case 3: //begin number search for second line
+            if (validInt (str [i])){
+                temp[SScount] = str[i];
+                SScount ++;
+            }
+            else if (str[i] == 'x'){
+                temp [SScount] = 0;
+                systs[expNum].two.a = atoi (temp);
+                SScount=0;
+                partition ++;
+            }
+        case 4: //finds operator (neccesary?)
+            if (str[i] == '-' || str[i] == '+')
+                partition ++;
+        case 5: //finds y intercept
+            if (validInt (str [i])){
+                temp[SScount] = str[i];
+                SScount ++;
+            }
+            if (str[i+1] == 0){
+                temp [SScount] = 0;
+                systs[expNum].one.b = atoi (temp);
+                SScount=0;
+                partition ++;
+            }
+
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/*
             if (str[i] == '-')
                 exps[expNum].num1.sign = signSwap (exps[expNum].num1.sign);
             else if (validInt (str [i])){
