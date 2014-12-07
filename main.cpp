@@ -2,7 +2,7 @@
 // Harry's job: parsing
 // Wilson's job: File stuff + misc...
 
-#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
+//#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,7 +73,7 @@ bool validInt (char character){//functions are handy and stuff
     return (character >= 48 && character <= 57);
 }
 
-int parse (char str[80], int expNum){
+int parse (char str[80], int expNum){//when calling parse function, you can pass it systs[expNum].one.eqn
     int SScount = 0;
     int partition = 0;
     char temp [80] = {""};
