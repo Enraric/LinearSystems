@@ -2,7 +2,7 @@
 // Harry's job: parsing
 // Wilson's job: File stuff + misc...
 
-#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
+//#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -165,7 +165,7 @@ int readFiles (){
 				printf ("%s",systs[i].two.eqn);
 			}
 
-			else{ 
+			else{
 				numSysts = i; // THIS IS IMPORTANT
 				return i;
 			}
@@ -182,6 +182,10 @@ int readFiles (){
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
+    printf ("Equations strings after being read: %s\t%s\n",systs[0].one.eqn, systs[0].two.eqn);
+	parse (systs[0].one.eqn, 0);
+	parse (systs[0].two.eqn, 0);
+	printf ("Equations after being parsed: %i\t%i\n%i\t%i\n",systs[0].one.a, systs[0].one.b, systs[0].two.a, systs[0].two.b);
     system ("PAUSE");
 	return 0;
 }
