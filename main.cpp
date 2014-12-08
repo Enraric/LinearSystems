@@ -51,11 +51,11 @@ void mathStuff (int i){
     Line lineD;
     float x, y;
 
-    if (systs.one.b*systs.two.a - systs.one.a*systs.two.b == 0 && systs.two.a*systs.one.e - systs.one.a*systs.two.e == 0){
-        printf ("Same line") //iunno how you file guys store this shit but that's how you check if it's the same line
+    if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
+        printf ("Same line"); //iunno how you file guys store this shit but that's how you check if it's the same line
     }
-    else if (systs.one.b*systs.two.a - systs.one.a*systs.two.b == 0 && systs.two.a*systs.one.e - systs.one.a*systs.two.e == 0){
-        printf ("No solutions") //iunno how you file guys store this shit but that's how you check if it's the same line
+    else if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
+        printf ("No solutions"); //iunno how you file guys store this shit but that's how you check if it's the same line
     }
 
     lineC = lineMult(systs[i].one, systs[i].two.a);
@@ -159,25 +159,29 @@ int readFiles (){
 
 		for (int i = 0;i<=MAX_SYSTEMS;i++){
 			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
-				fgets (systs[i].one.eqn,MAX_CHARS,fp);
-				fgets (systs[i].two.eqn,MAX_CHARS,fp);
+				//fgets (systs[i].one.eqn,MAX_CHARS,fp);
+				//fgets (systs[i].two.eqn,MAX_CHARS,fp);
 				printf ("%s",systs[i].one.eqn); // Test code
 				printf ("%s",systs[i].two.eqn);
 			}
 
-			else return i;
+			else{ 
+				numSysts = i; // THIS IS IMPORTANT
+				return i;
+			}
 		}
 
 	}
-	else return 0; // Indicates that opening the file failed...
-
+	else{
+		numSysts = 0; // THIS IS IMPORTANT
+		return 0; // Indicates that opening the file failed...
+	}
 	return MAX_SYSTEMS;
 }
 
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
-	numSysts = readFiles();
     system ("PAUSE");
 	return 0;
 }
