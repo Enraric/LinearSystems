@@ -27,6 +27,7 @@ struct System {
 
 System systs [MAX_SYSTEMS];
 int numSysts = 0; // I'm not sure if this should be global, it seems like this could mess stuff up real bad -Wilson
+//why for the love of god is this global, and the naming too syst > systs
 
 //Alex's Mathemagical Mathland//////////////////////////////////////////////////////////////////////////////
 
@@ -76,7 +77,7 @@ bool validInt (char character){//functions are handy and stuff
 int parse (char str[80], int expNum){//when calling parse function, you can pass it systs[expNum].one.eqn
     int SScount = 0;
     int partition = 0;
-    char temp [80] = {""};
+    char temp [80] = {"1"};
     //Looks like Ill have time to actually turn this mess into functions this time: yay
     //attempting to handle format of "slopex+-intercept/slopex+-intercept"
     //walks through array, looking for a different sentinels (#, x, + or -, #, /, #, x, + or -, #)
@@ -104,38 +105,6 @@ int parse (char str[80], int expNum){//when calling parse function, you can pass
                 temp[SScount] = str[i];
                 SScount ++;
             }
-            else if (str[i] == '/'){
-                temp [SScount] = 0;
-                systs[expNum].one.b = atoi (temp);
-                SScount=0;
-                partition ++;
-            }
-        case 3: //begin number search for second line
-            if (validInt (str [i])){
-                temp[SScount] = str[i];
-                SScount ++;
-            }
-            else if (str[i] == 'x'){
-                temp [SScount] = 0;
-                systs[expNum].two.a = atoi (temp);
-                SScount=0;
-                partition ++;
-            }
-        case 4: //finds operator (neccesary?)
-            if (str[i] == '-' || str[i] == '+')
-                partition ++;
-        case 5: //finds y intercept
-            if (validInt (str [i])){
-                temp[SScount] = str[i];
-                SScount ++;
-            }
-            if (str[i+1] == 0){
-                temp [SScount] = 0;
-                systs[expNum].one.b = atoi (temp);
-                SScount=0;
-                partition ++;
-            }
-
         }
     }
 
@@ -166,8 +135,12 @@ int readFiles (){
 
 int main (){
     printf ("Hello, world...\n");
-	printf ("%i Valid equations",readFiles());
+	printf ("%i Valid systems\n",readFiles());
 	numSysts = readFiles();
+	printf ("%s\t%s\n",systs[0].one.eqn, systs[0].two.eqn);
+	parse (systs[0].one.eqn, 0);
+	parse (systs[0].two.eqn, 0);
+	printf ("%i\t%i\n%i\t%i\n",systs[0].one.a, systs[0].one.b, systs[0].two.a, systs[0].two.b);
     system ("PAUSE");
 	return 0;
 }
