@@ -51,6 +51,13 @@ void mathStuff (int i){
     Line lineD;
     float x, y;
 
+    if (systs.one.b*systs.two.a - systs.one.a*systs.two.b == 0 && systs.two.a*systs.one.e - systs.one.a*systs.two.e == 0){
+        printf ("Same line") //iunno how you file guys store this shit but that's how you check if it's the same line
+    }
+    else if (systs.one.b*systs.two.a - systs.one.a*systs.two.b == 0 && systs.two.a*systs.one.e - systs.one.a*systs.two.e == 0){
+        printf ("No solutions") //iunno how you file guys store this shit but that's how you check if it's the same line
+    }
+
     lineC = lineMult(systs[i].one, systs[i].two.a);
     lineD = lineMult(systs[i].two, systs[i].one.a);
 
