@@ -2,7 +2,7 @@
 // Harry's job: parsing
 // Wilson's job: File stuff + misc...
 
-//#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
+#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -154,7 +154,10 @@ int readFiles (){
 			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
 				fgets (systs[i].one.eqn,MAX_CHARS,fp);
 				fgets (systs[i].two.eqn,MAX_CHARS,fp);
+				printf ("%s",systs[i].one.eqn); // Test code
+				printf ("%s",systs[i].two.eqn);
 			}
+
 			else return i;
 		}
 
@@ -166,7 +169,7 @@ int readFiles (){
 
 int main (){
     printf ("Hello, world...\n");
-	printf ("%i Valid equations",readFiles());
+	printf ("%i Valid systems\n",readFiles());
 	numSysts = readFiles();
     system ("PAUSE");
 	return 0;
