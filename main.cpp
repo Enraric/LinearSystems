@@ -52,6 +52,13 @@ void mathStuff (int i){
     Line lineD;
     float x, y;
 
+    if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
+        printf ("Same line"); //iunno how you file guys store this shit but that's how you check if it's the same line
+    }
+    else if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
+        printf ("No solutions"); //iunno how you file guys store this shit but that's how you check if it's the same line
+    }
+
     lineC = lineMult(systs[i].one, systs[i].two.a);
     lineD = lineMult(systs[i].two, systs[i].one.a);
 
@@ -76,7 +83,7 @@ bool validInt (char character){//functions are handy and stuff
 
 int parse (char str[80], int expNum){//when calling parse function, you can pass it systs[expNum].one.eqn
     int SScount = 0;
-    int partition = 0;
+    int section = 0;
     char temp [80] = {"1"};
     //Looks like Ill have time to actually turn this mess into functions this time: yay
     //attempting to handle format of "slopex+-intercept/slopex+-intercept"
@@ -84,8 +91,8 @@ int parse (char str[80], int expNum){//when calling parse function, you can pass
     //example valid expression: "12x+4/6x-2"
     //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; str[i] != 0; i++){
-        printf ("%i\t%c\t%i\n", i, str[i], partition);
-        switch (partition){
+        //printf ("%i\t%c\t%i\n", i, str[i], section);
+        switch (section){
         case 0: //adds numbers to a temp string until x
             if (validInt (str [i])){
                 temp[SScount] = str[i];
@@ -95,20 +102,28 @@ int parse (char str[80], int expNum){//when calling parse function, you can pass
                 temp [SScount] = 0;
                 systs[expNum].one.a = atoi (temp);
                 SScount=0;
-                partition ++;
+                section ++;
             }
+            break;
         case 1: //finds operator (neccesary?)
             if (str[i] == '-' || str[i] == '+')
-                partition ++;
+                section ++;
+            break;
         case 2: //finds y intercept
             if (validInt (str [i])){
                 temp[SScount] = str[i];
                 SScount ++;
             }
+            else if (str[i] == '\n'){
+                systs[expNum].one.a = atoi (temp);
+                printf ("Parse success\n");
+                return 1;
+                }
+            break;
+            }
         }
-    }
-
-	return 1; // I have to put this here to get it to compile wat -Wilson
+    printf ("Parse failed\n");
+	return 0;
 }
 //_____________________________________________________________________End Parse
 
@@ -120,16 +135,35 @@ int readFiles (){
 	if (fp) {
 
 		for (int i = 0;i<=MAX_SYSTEMS;i++){
+
 			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
-				fgets (systs[i].one.eqn,MAX_CHARS,fp);
-				fgets (systs[i].two.eqn,MAX_CHARS,fp);
+				//fgets (systs[i].one.eqn,MAX_CHARS,fp);
+				//fgets (systs[i].two.eqn,MAX_CHARS,fp);
+
+				if (systs[i].one.eqn[0] == '\n' ){
+				printf ("Some whitespace found\n");
+				while (fgets (systs[i].one.eqn,MAX_CHARS,fp) && systs[i].one.eqn[0] == '\n' ){
+				}
 			}
-			else return i;
+
+			else if (systs[i].two.eqn[0] == '\n' ) {
+				printf ("Some whitespace found\n");
+				while (fgets (systs[i].two.eqn,MAX_CHARS,fp)&& systs[i].two.eqn[0] == '\n'){
+					}
+				}
+			}
+
+			else{
+				numSysts = i; // THIS IS IMPORTANT
+				return i;
+			}
 		}
 
 	}
-	else return 0; // Indicates that opening the file failed...
-
+	else{
+		numSysts = 0; // THIS IS IMPORTANT
+		return 0; // Indicates that opening the file failed...
+	}
 	return MAX_SYSTEMS;
 }
 
@@ -137,10 +171,16 @@ int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
 	numSysts = readFiles();
-	printf ("%s\t%s\n",systs[0].one.eqn, systs[0].two.eqn);
-	parse (systs[0].one.eqn, 0);
-	parse (systs[0].two.eqn, 0);
-	printf ("%i\t%i\n%i\t%i\n",systs[0].one.a, systs[0].one.b, systs[0].two.a, systs[0].two.b);
+
+	printf ("Printing all read in things.\n");
+
+	for (int i = 0; i<= numSysts;i++){
+			printf ("%s",systs[i].one.eqn); // Test code
+			printf ("%s",systs[i].two.eqn);
+	}
+    printf ("Equation string after being read: %s\n",systs[2].one.eqn);
+	parse (systs[2].one.eqn, 0);
+	printf ("Equation after being parsed: %i\t%i\n",systs[2].one.a, systs[2].one.b);
     system ("PAUSE");
 	return 0;
 }
