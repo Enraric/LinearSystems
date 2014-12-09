@@ -92,7 +92,7 @@ int parse (int expNum){
     char temp [80] = {""};
     //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; systs[expNum].eqn[i] != 0; i++){
-        printf ("%i\t%c\t%i\n", i, systs[expNum].eqn[i], section);
+        //printf ("%i\t%c\t%i\n", i, systs[expNum].eqn[i], section);
         //NEED TO TURN THESE CASES INTO FUNCTIONS
         switch (section){
         case 0: //adds numbers to a temp string until x
@@ -157,12 +157,14 @@ int parse (int expNum){
                 systs[expNum].two.e = atoi (temp);
                 SScount=0;
                 section ++;
-                printf ("parse succeeded");
+                printf ("parse succeeded\n");
+                system ("PAUSE");//Feel free to remove this, as well as the one below once it stops looping infinitely
                 return 1;
             }
         }
     }
     printf ("Parse failed\n");
+    system ("PAUSE");////Feel free to remove this, as well as the one below once it stops looping indefintely
 	return 0;
 }
 //_____________________________________________________________________End Parse
