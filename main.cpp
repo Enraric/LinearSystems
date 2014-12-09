@@ -78,21 +78,21 @@ void mathHandler(){
 //___________________________________________________________________Begin Parse
 
 bool validInt (char character){//functions are handy and stuff
-    return (character >= 48 && character <= 57 || character == 45 || character == 47);
+    return (character >= 48 && character <= 57 || character == '-' || character == '+');
 }
 
 int parse (int expNum){
+    printf ("\n\nBegin Parse with passed string of:\t%s\n", systs[expNum].eqn);
     //when calling parse function, you pass it which SYSTEM you want parsed
     //Parse returns:
-    //  0 for success ZERO, NOT ONE
-    //  1 for first line failed
-    //  2 for second line failed
+    //  0 for success
+    //  1 for fail (should print error message including which failed)
     int SScount = 0;
     int section = 0;
     char temp [80] = {""};
     //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; systs[expNum].eqn[i] != 0; i++){
-        //printf ("%i\t%c\t%i\n", i, str[i], section);
+        printf ("%i\t%c\t%i\n", i, systs[expNum].eqn[i], section);
         //NEED TO TURN THESE CASES INTO FUNCTIONS
         switch (section){
         case 0: //adds numbers to a temp string until x
@@ -157,9 +157,11 @@ int parse (int expNum){
                 systs[expNum].two.e = atoi (temp);
                 SScount=0;
                 section ++;
-            }
+                printf ("parse succeeded");
+                return 1;
             }
         }
+    }
     printf ("Parse failed\n");
 	return 0;
 }
