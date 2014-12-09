@@ -25,7 +25,7 @@ struct System { // this is also bad
        char eqn [MAX_CHARS];
 };
 
-System systs [MAX_SYSTEMS]; // cysts* FTFY
+System systs [MAX_SYSTEMS]; // cysts FTFY
 int numSysts = 0; // I'm not sure if this should be global, it seems like this could mess stuff up real bad -Wilson
 //why for the love of god is this global, and the naming too syst > systs
 
@@ -174,19 +174,11 @@ int readFiles (){
 
 		for (int i = 0;i<=MAX_SYSTEMS;i++){
 
-			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
-				//fgets (systs[i].one.eqn,MAX_CHARS,fp);
-				//fgets (systs[i].two.eqn,MAX_CHARS,fp);
-
-				if (systs[i].one.eqn[0] == '\n' ){
-				printf ("Some whitespace found\n");
-				while (fgets (systs[i].one.eqn,MAX_CHARS,fp) && systs[i].one.eqn[0] == '\n' ){
-				}
-			}
-
-			else if (systs[i].two.eqn[0] == '\n' ) {
-				printf ("Some whitespace found\n");
-				while (fgets (systs[i].two.eqn,MAX_CHARS,fp)&& systs[i].two.eqn[0] == '\n'){
+			if (fgets (systs[i].eqn,MAX_CHARS,fp )){
+				while (parse (i)!=0){
+					if (fgets (systs[i].eqn,MAX_CHARS,fp ) == "NULL"){
+						numSysts = i; // THIS IS IMPORTANT
+						return i;
 					}
 				}
 			}
@@ -208,12 +200,11 @@ int readFiles (){
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
-	numSysts = readFiles();
 
 	printf ("Printing all read in things.\n");
 
-	for (int i = 0; i<= numSysts;i++){
-			printf ("%s",systs[i].eqn[i]); // Test code
+	for (int i = 0; i< numSysts;i++){
+			printf ("%s",systs[i].eqn); // Test code
 	}
 	/*
     printf ("Equation string after being read: %s\n",systs[expNum].eqn[i]);
