@@ -2,7 +2,7 @@
 // Harry's job: parsing
 // Wilson's job: File stuff + misc...
 
-//#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
+#include "stdafx.h" // Comment this out if this appears in your stuff, it's for my weird compiler thing -Wilson
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -158,11 +158,22 @@ int readFiles (){
 	if (fp) {
 
 		for (int i = 0;i<=MAX_SYSTEMS;i++){
+			
 			if (fgets (systs[i].one.eqn,MAX_CHARS,fp) && fgets (systs[i].two.eqn,MAX_CHARS,fp) ){
 				//fgets (systs[i].one.eqn,MAX_CHARS,fp);
 				//fgets (systs[i].two.eqn,MAX_CHARS,fp);
-				printf ("%s",systs[i].one.eqn); // Test code
-				printf ("%s",systs[i].two.eqn);
+
+				if (systs[i].one.eqn[0] == '\n' ){
+				printf ("Some whitespace found\n");
+				while (fgets (systs[i].one.eqn,MAX_CHARS,fp) && systs[i].one.eqn[0] == '\n' ){
+				}
+			}
+
+			else if (systs[i].two.eqn[0] == '\n' ) {
+				printf ("Some whitespace found\n");
+				while (fgets (systs[i].two.eqn,MAX_CHARS,fp)&& systs[i].two.eqn[0] == '\n'){
+					}
+				}
 			}
 
 			else{
@@ -182,6 +193,13 @@ int readFiles (){
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
+
+	printf ("Printing all read in things.\n");
+
+	for (int i = 0; i<= numSysts;i++){
+			printf ("%s",systs[i].one.eqn); // Test code
+			printf ("%s",systs[i].two.eqn);
+	}
     printf ("Equations strings after being read: %s\t%s\n",systs[0].one.eqn, systs[0].two.eqn);
 	parse (systs[0].one.eqn, 0);
 	parse (systs[0].two.eqn, 0);
