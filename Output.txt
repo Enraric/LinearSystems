@@ -1,2 +1,4 @@
-1.000000,1388.000000
-1.500000,1110.000000
+Same Line.
+Same Line.
+Same Line.
+Same Line.

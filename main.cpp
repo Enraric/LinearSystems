@@ -83,97 +83,60 @@ void mathHandler(){
 
 //___________________________________________________________________Begin Parse
 
-bool validInt (char character){//functions are handy
+bool validInt (char character) {//functions are handy
     return (character >= 48 && character <= 57 || character == '-' || character == '+');
 }
 
-
+int parseCore (char sentinel, int expNum, int i, int* section) {
+    int SScount = 0;
+    char temp[80] = "";
+    //printf ("%c\t%i\t%i\t%i\t%c\n", sentinel,  expNum,  i, *section, systs[expNum].eqn[i]);
+    if (validInt (systs[expNum].eqn[i])) {
+        temp[SScount] = systs[expNum].eqn[i];
+        SScount++;
+    }
+    else if (systs[expNum].eqn[i] == sentinel) {
+        temp [SScount] = 0;
+        (*section)++;
+        return (atoi (temp));
+    }
+    return 0; //if invalid, should return this
+}
 
 int parse (int expNum){
     printf ("\n\nBegin Parse with passed string of:\t%s\n", systs[expNum].eqn);
-    //when calling parse function, you pass it which SYSTEM you want parsed
-    //Parse returns:
-    //  1 for success
-    //  0 for fail (should print error message including which failed)
+    //when calling parse function, you pass it which SYSTEM you want parsed, it does the rest :D
+    //returns 1 if the expression is acceptable, 0 if not
     int SScount = 0;
     int section = 0;
     char temp [80] = {""};
     //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; systs[expNum].eqn[i] != 0; i++){
         //printf ("%i\t%c\t%i\n", i, systs[expNum].eqn[i], section);
-        //NEED TO TURN THESE CASES INTO FUNCTIONS
         switch (section){
         case 0: //adds numbers to a temp string until x
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == 'x'){
-                temp [SScount] = 0;
-                systs[expNum].one.a = atoi (temp);
-                SScount=0;
-                section ++;
-            }
+            systs[expNum].one.a = parseCore('x', expNum, i, &section);
             break;
         case 1: //finds y intercept
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == '='){
-                systs[expNum].one.b = atoi (temp);
-                SScount=0;
-                section ++;
-            }
+            systs[expNum].one.b = parseCore('=', expNum, i, &section);
             break;
-        case 2:
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == ','){
-                systs[expNum].one.e = atoi (temp);
-                SScount=0;
-                section ++;
-            }
-        case 3:
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == 'x'){
-                systs[expNum].two.a = atoi (temp);
-                SScount=0;
-                section ++;
-            }
+        case 2://finds answer to equation, ending before the comma
+            systs[expNum].one.e = parseCore(',', expNum, i, &section);
+            break;
+        case 3://start second line
+            systs[expNum].two.a = parseCore('x', expNum, i, &section);
+            break;
         case 4:
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == '='){
-                systs[expNum].two.b = atoi (temp);
-                SScount=0;
-                section ++;
-            }
+            systs[expNum].two.b = parseCore('=', expNum, i, &section);
+            break;
         case 5:
-            if (validInt (systs[expNum].eqn[i])){
-                temp[SScount] = systs[expNum].eqn[i];
-                SScount ++;
-            }
-            else if (systs[expNum].eqn[i] == '\n'){
-                systs[expNum].two.e = atoi (temp);
-                SScount=0;
-                section ++;
-                printf ("parse succeeded\n");
-                system ("PAUSE");//Feel free to remove this, as well as the one below once it stops looping infinitely
-                return 1;
-            }
+            systs[expNum].two.e = parseCore('\n', expNum, i, &section);
+            break;
         }
     }
+    return 1;
     printf ("Parse failed\n");
-    system ("PAUSE");////Feel free to remove this, as well as the one below once it stops looping indefintely
-	return 0;
+    return 0;
 }
 //_____________________________________________________________________End Parse
 
@@ -184,12 +147,12 @@ int readFiles (){
 
 	if (fp) {
 
-		for (int i = 0;i<=MAX_SYSTEMS;i++){
+		for (int i = 0;i <= MAX_SYSTEMS;i++){
 
 			if (fgets (systs[i].eqn,MAX_CHARS,fp )){
 				while (parse (i)!=1){
 					if (fgets (systs[i].eqn,MAX_CHARS,fp ) == "NULL"){
-						numSysts = i; // THIS IS IMPORTANT
+						numSysts = i; // THIS IS IMPORTANT (AND MAY NOT WORK PROPERLY!!!!!)*printf in main for proof
 						fclose (fp);
 						return i;
 					}
@@ -229,17 +192,13 @@ void writeFiles(){
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
-	printf ("Printing all read in things.\n");
 
 	for (int i = 0; i< numSysts;i++){
-			printf ("String1 is:\t%s\nnumber 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i",systs[i].eqn,systs[i].one.a, systs[i].one.b, systs[i].one.e ); // Test code
-			printf ("String2 is:\t%s\nnumber 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i",systs[i].eqn,systs[i].two.a, systs[i].two.b, systs[i].two.e ); // Test code
+			printf ("number 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i\n",systs[i].one.a, systs[i].one.b, systs[i].one.e ); // Test code
+			printf ("number 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i\n\n",systs[i].two.a, systs[i].two.b, systs[i].two.e ); // Test code
 	}
-	/*
-    printf ("Equation string after being read: %s\n",systs[expNum].eqn[i]);
-	parse (systs[2].one.eqn, 0);
-	printf ("Equation after being parsed: %i\t%i\n",systs[2].one.a, systs[2].one.b);
-	*/
+
+
 	mathHandler();
 	writeFiles();
     system ("PAUSE");
