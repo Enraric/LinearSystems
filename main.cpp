@@ -10,6 +10,7 @@
 #include "iostream"
 
 #define FILE_NAME "Test.txt" // Change this if you want to change the file name.
+#define FILE_NAME2 "Output.txt"
 #define MAX_SYSTEMS 200
 #define MAX_CHARS 50
 
@@ -23,6 +24,9 @@ struct System {
        Line one;
        Line two;
        char eqn [MAX_CHARS];
+	   float x;
+	   float y;
+	   char ans[MAX_CHARS];
 };
 
 System systs [MAX_SYSTEMS];
@@ -49,20 +53,23 @@ void mathStuff (int i){
 
     Line lineC;
     Line lineD;
-    float x, y;
 
     if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
         printf ("Same line"); //iunno how you file guys store this shit but that's how you check if it's the same line
+		sprintf (systs[i].ans,"Same Line.\n");
     }
     else if (systs[i].one.b*systs[i].two.a - systs[i].one.a*systs[i].two.b == 0 && systs[i].two.a*systs[i].one.e - systs[i].one.a*systs[i].two.e == 0){
         printf ("No solutions"); //iunno how you file guys store this shit but that's how you check if it's the same line
+		sprintf (systs[i].ans,"No Solutions.\n");
     }
-
+	else{
     lineC = LineMult(systs[i].one, systs[i].two.a);
     lineD = LineMult(systs[i].two, systs[i].one.a);
 
-    y = systSolve (lineC, lineD);
-    x = lineSub (y, systs[i].one);
+    systs[i].y = systSolve (lineC, lineD);
+    systs[i].x = lineSub (systs[i].y, systs[i].one);
+	sprintf (systs[i].ans,"%f,%f\n",systs[i].x,systs[i].y);
+	}
 
 }
 
@@ -202,6 +209,20 @@ int readFiles (){
 	return MAX_SYSTEMS;
 }
 
+void writeFiles(){
+	FILE *fp;
+
+	fp = fopen(FILE_NAME2,"w");
+
+	if (fp){
+		for (int i = 0;i<numSysts;i++){
+			fputs (systs[i].ans,fp);
+		}
+
+	}
+
+}
+
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
@@ -216,6 +237,8 @@ int main (){
 	parse (systs[2].one.eqn, 0);
 	printf ("Equation after being parsed: %i\t%i\n",systs[2].one.a, systs[2].one.b);
 	*/
+	mathHandler();
+	writeFiles();
     system ("PAUSE");
 	return 0;
 }
