@@ -190,6 +190,7 @@ int readFiles (){
 				while (parse (i)!=1){
 					if (fgets (systs[i].eqn,MAX_CHARS,fp ) == "NULL"){
 						numSysts = i; // THIS IS IMPORTANT
+						fclose (fp);
 						return i;
 					}
 				}
@@ -197,6 +198,7 @@ int readFiles (){
 
 			else{
 				numSysts = i; // THIS IS IMPORTANT
+				fclose (fp);
 				return i;
 			}
 		}
@@ -204,6 +206,7 @@ int readFiles (){
 	}
 	else{
 		numSysts = 0; // THIS IS IMPORTANT
+		fclose (fp);
 		return 0; // Indicates that opening the file failed...
 	}
 	return MAX_SYSTEMS;
@@ -218,7 +221,7 @@ void writeFiles(){
 		for (int i = 0;i<numSysts;i++){
 			fputs (systs[i].ans,fp);
 		}
-
+		fclose (fp);
 	}
 
 }
