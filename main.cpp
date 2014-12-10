@@ -13,21 +13,20 @@
 #define MAX_SYSTEMS 200
 #define MAX_CHARS 50
 
-struct Line { // this is bad
+struct Line {
        int a;
        int b;
        int e;
 };
 
-struct System { // this is also bad
+struct System {
        Line one;
        Line two;
        char eqn [MAX_CHARS];
 };
 
-System systs [MAX_SYSTEMS]; // cysts FTFY
-int numSysts = 0; // I'm not sure if this should be global, it seems like this could mess stuff up real bad -Wilson
-//why for the love of god is this global, and the naming too syst > systs
+System systs [MAX_SYSTEMS];
+int numSysts = 0;
 
 //Alex's Mathemagical Mathland of Math//////////////////////////////////////////////////////////////////////////////
 
@@ -77,16 +76,18 @@ void mathHandler(){
 
 //___________________________________________________________________Begin Parse
 
-bool validInt (char character){//functions are handy and stuff
+bool validInt (char character){//functions are handy
     return (character >= 48 && character <= 57 || character == '-' || character == '+');
 }
+
+
 
 int parse (int expNum){
     printf ("\n\nBegin Parse with passed string of:\t%s\n", systs[expNum].eqn);
     //when calling parse function, you pass it which SYSTEM you want parsed
     //Parse returns:
-    //  0 for success
-    //  1 for fail (should print error message including which failed)
+    //  1 for success
+    //  0 for fail (should print error message including which failed)
     int SScount = 0;
     int section = 0;
     char temp [80] = {""};
@@ -204,11 +205,11 @@ int readFiles (){
 int main (){
     printf ("Hello, world...\n");
 	printf ("%i Valid systems\n",readFiles());
-
 	printf ("Printing all read in things.\n");
 
 	for (int i = 0; i< numSysts;i++){
-			printf ("%s",systs[i].eqn); // Test code
+			printf ("String1 is:\t%s\nnumber 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i",systs[i].eqn,systs[i].one.a, systs[i].one.b, systs[i].one.e ); // Test code
+			printf ("String2 is:\t%s\nnumber 1:\t%i\nnumber 2:\t%i\nanswer is:\t%i",systs[i].eqn,systs[i].two.a, systs[i].two.b, systs[i].two.e ); // Test code
 	}
 	/*
     printf ("Equation string after being read: %s\n",systs[expNum].eqn[i]);
