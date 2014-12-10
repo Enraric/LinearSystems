@@ -179,7 +179,7 @@ int readFiles (){
 		for (int i = 0;i<=MAX_SYSTEMS;i++){
 
 			if (fgets (systs[i].eqn,MAX_CHARS,fp )){
-				while (parse (i)!=0){
+				while (parse (i)!=1){
 					if (fgets (systs[i].eqn,MAX_CHARS,fp ) == "NULL"){
 						numSysts = i; // THIS IS IMPORTANT
 						return i;
