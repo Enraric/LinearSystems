@@ -87,56 +87,57 @@ bool validInt (char character) {//functions are handy
     return (character >= 48 && character <= 57 || character == '-' || character == '+');
 }
 
-int parseCore (char sentinel, int expNum, int i, int* section) {
-    int SScount = 0;
-    char temp[80] = "";
-    //printf ("%c\t%i\t%i\t%i\t%c\n", sentinel,  expNum,  i, *section, systs[expNum].eqn[i]);
-    if (validInt (systs[expNum].eqn[i])) {
-        temp[SScount] = systs[expNum].eqn[i];
-        SScount++;
+int parseCore (char sentinel, char subjectChar, int* SScount, char heapString[80], int* section) {
+    //if the character is the specified sentinel, return the finalized string
+    if (subjectChar == sentinel) {
+        *section = *section + 1;
+        heapString [*SScount] = 0;
+        *SScount = 0;
+        return (atoi (heapString));
     }
-    else if (systs[expNum].eqn[i] == sentinel) {
-        temp [SScount] = 0;
-        (*section)++;
-        return (atoi (temp));
+    //checks whether the charter passed FROM parse is acceptable, if so: adds to a temp string
+    if (validInt (subjectChar)) {
+        heapString[*SScount] = subjectChar;
+        (*SScount)++;
     }
-    return 0; //if invalid, should return this
+    //if the character is otherwise generic, continue searching
+    return 0;
 }
 
 int parse (int expNum){
-    printf ("\n\nBegin Parse with passed string of:\t%s\n", systs[expNum].eqn);
     //when calling parse function, you pass it which SYSTEM you want parsed, it does the rest :D
     //returns 1 if the expression is acceptable, 0 if not
     int SScount = 0;
     int section = 0;
-    char temp [80] = {""};
+    char heapString [80] = {""};
     //potential additions: fractions for slope (feel free to add more, guys)
     for (int i = 0; systs[expNum].eqn[i] != 0; i++){
         //printf ("%i\t%c\t%i\n", i, systs[expNum].eqn[i], section);
         switch (section){
-        case 0: //adds numbers to a temp string until x
-            systs[expNum].one.a = parseCore('x', expNum, i, &section);
+        case 0: //adds numbers to a temporary string until x
+            systs[expNum].one.a = parseCore ('x', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
         case 1: //finds y intercept
-            systs[expNum].one.b = parseCore('=', expNum, i, &section);
+            systs[expNum].one.b = parseCore ('=', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
         case 2://finds answer to equation, ending before the comma
-            systs[expNum].one.e = parseCore(',', expNum, i, &section);
+            systs[expNum].one.e = parseCore (',', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
-        case 3://start second line
-            systs[expNum].two.a = parseCore('x', expNum, i, &section);
+        case 3://start second section
+            systs[expNum].two.a = parseCore ('x', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
         case 4:
-            systs[expNum].two.b = parseCore('=', expNum, i, &section);
+            systs[expNum].two.b = parseCore ('=', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
         case 5:
-            systs[expNum].two.e = parseCore('\n', expNum, i, &section);
+            systs[expNum].two.e = parseCore ('\n', systs[expNum].eqn[i], &SScount, heapString, &section);
             break;
         }
     }
-    return 1;
-    printf ("Parse failed\n");
-    return 0;
+    if (section == 6)
+        return 1;
+    else
+        return 0;
 }
 //_____________________________________________________________________End Parse
 
